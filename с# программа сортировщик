@@ -1,0 +1,172 @@
+using System;
+using System.Diagnostics;
+using System.Windows.Forms;
+
+namespace SortingProgram
+{
+    public partial class Form1 : Form
+    {
+        private int[] data;
+
+        public Form1()
+        {
+            InitializeComponent();
+        }
+
+        private void GenerateButton_Click(object sender, EventArgs e)
+        {
+            int size = (int)SizeNumericUpDown.Value;
+            data = new int[size];
+
+            Random random = new Random();
+            for (int i = 0; i < size; i++)
+            {
+                data[i] = random.Next(100);
+            }
+
+            DataTextBox.Text = string.Join(" ", data);
+        }
+
+        private void SortButton_Click(object sender, EventArgs e)
+        {
+            if (data == null)
+            {
+                MessageBox.Show("Please generate data first.");
+                return;
+            }
+
+            Stopwatch stopwatch = new Stopwatch();
+            switch (SortComboBox.SelectedItem.ToString())
+            {
+                case "Bubble Sort":
+                    stopwatch.Start();
+                    BubbleSort(data);
+                    stopwatch.Stop();
+                    break;
+
+                case "Shell Sort":
+                    stopwatch.Start();
+                    ShellSort(data);
+                    stopwatch.Stop();
+                    break;
+
+                case "Selection Sort":
+                    stopwatch.Start();
+                    SelectionSort(data);
+                    stopwatch.Stop();
+                    break;
+
+                case "Insertion Sort":
+                    stopwatch.Start();
+                    InsertionSort(data);
+                    stopwatch.Stop();
+                    break;
+            }
+
+            DataTextBox.Text = string.Join(" ", data);
+            TimeLabel.Text = $"Time: {stopwatch.ElapsedMilliseconds} ms";
+        }
+
+        private void BubbleSort(int[] array)
+        {
+            int n = array.Length;
+            for (int i = 0; i < n - 1; i++)
+            {
+                for (int j = 0; j < n - i - 1; j++)
+                {
+                    if (array[j] > array[j + 1])
+                    {
+                        int temp = array[j];
+                        array[j] = array[j + 1];
+                        array[j + 1] = temp;
+                    }
+                }
+            }
+        }
+
+        private void ShellSort(int[] array)
+        {
+            int n = array.Length;
+            int gap = n / 2;
+
+            while (gap > 0)
+            {
+                for (int i = gap; i < n; i++)
+                {
+                    int temp = array[i];
+                    int j;
+
+                    for (j = i; j >= gap && array[j - gap] > temp; j -= gap)
+                    {
+                        array[j] = array[j - gap];
+                    }
+
+                    array[j] = temp;
+                }
+
+                gap /= 2;
+            }
+        }
+
+        private void SelectionSort(int[] array)
+        {
+            int n = array.Length;
+
+            for (int i = 0; i < n - 1; i++)
+            {
+                int minIndex = i;
+
+                for (int j = i + 1; j < n; j++)
+                {
+                    if (array[j] < array[minIndex])
+                    {
+                        minIndex = j;
+                    }
+                }
+
+                int temp = array[minIndex];
+                array[minIndex] = array[i];
+                array[i] = temp;
+            }
+        }
+
+        private void InsertionSort(int[] array)
+        {
+            int n = array.Length;
+
+            for (int i = 1; i < n; i++)
+            {
+                int key = array[i];
+                int j = i - 1;
+
+                while (j >= 0 && array[j] > key)
+                {
+                    array[j + 1] = array[j];
+                    j--;
+                }
+
+                array[j + 1] = key;
+            }
+        }
+
+        private void TimeLabel_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void SortComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void textBox4_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+    }
+}
